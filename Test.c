@@ -8,7 +8,7 @@ struct node
     struct node *right;
 };
 typedef struct node Node;
-// Function to insert a node into the BST
+
 Node *insert(Node *root, int data, int frequency);
 void preOrder(Node *root);
 void readingFile(FILE *file, Node **root);
@@ -27,14 +27,13 @@ int main()
 
 Node *insert(Node *root, int data, int frequency)
 {
-    // If the tree is empty, create a new node and return it as the root
+   
     if (root == NULL)
     {
         root = (Node *)malloc(sizeof(Node));
         if (root == NULL)
-        {
             return 0;
-        }
+        
 
         root->data = data;
         root->frequency = frequency;
@@ -42,7 +41,7 @@ Node *insert(Node *root, int data, int frequency)
         return root;
     }
 
-    // Otherwise, recur down the tree
+  
     if (data < root->data)
     {
         root->left = insert(root->left, data, frequency);
@@ -51,17 +50,12 @@ Node *insert(Node *root, int data, int frequency)
     {
         root->right = insert(root->right, data, frequency);
     }
-    else
-    {
-        // If data is equal, update the frequency (or perform any other desired operation)
-        root->frequency += frequency;
-    }
+  
 
-    // Return the (unchanged) node pointer
     return root;
 }
 
-// Function to perform an in-order traversal of the BST
+
 void preOrder(Node *root)
 {
     if (root != NULL)
