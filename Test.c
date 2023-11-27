@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct node
+struct node
 {
     int data;
     int frequency;
     struct node *left;
     struct node *right;
-} Node;
-
+};
+typedef struct node Node;
 // Function to insert a node into the BST
 Node *insert(Node *root, int data, int frequency);
 void preOrder(Node *root);
@@ -17,7 +16,6 @@ void readingFile(FILE *file, Node **root);
 
 int main()
 {
-
     Node *root = NULL;
     FILE *file = fopen("input.txt", "r");
     readingFile(file, &root);
@@ -25,6 +23,8 @@ int main()
     preOrder(root);
     return 0;
 }
+
+
 Node *insert(Node *root, int data, int frequency)
 {
     // If the tree is empty, create a new node and return it as the root
