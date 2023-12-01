@@ -16,7 +16,6 @@ void readingFile(FILE *file, Node **root);
 void rotateTree(Node **node);
 Node *leftRotation(Node* node);
 Node *rightRotation(Node* node);
-void search(Node** root, int data);
 void searchA(Node* root, int data);
 int main()
 {
@@ -111,9 +110,9 @@ void rotateTree(Node** node) {
             (*node) = rightRotation((*node));
         }
         if ((*node)->right != NULL)
-            rotateTree(&(*node)->left);
+            rotateTree(&(*node)->right);
     }
-    else if ((*node)->right != NULL) {
+    if ((*node)->right != NULL) {
         rotateTree(&(*node)->right);
         if ((*node)->frequency < (*node)->right->frequency) {
 
