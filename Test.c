@@ -11,7 +11,7 @@ typedef struct node Node;
 
 
 Node *insert(Node *root, int data, int frequency);
-void preOrder(Node *root);
+void preOrder(Node *root, int isChild);
 void readingFile(FILE *file, Node **root);
 void rotateTree(Node **node);
 Node *leftRotation(Node* node);
@@ -21,13 +21,13 @@ Node *rightRotation(Node* node);
 int main()
 {
     Node *root = NULL;
-    FILE *file = fopen("input.txt", "r");
+    char inputFile[25];
+    scanf("%s", inputFile);
+    FILE *file = fopen(inputFile, "r");
     readingFile(file, &root);
     printf("Pre-order traversal of constructed tree : ");
     rotateTree(&root);
-    preOrder(root);
-    if(root->left->right != NULL)
-        printf("\n%d",root->data);
+    preOrder(root, 0);
     return 0;
 }
 
@@ -62,13 +62,15 @@ Node *insert(Node *root, int data, int frequency)
 }
 
 
-void preOrder(Node *root)
+void preOrder(Node *root, int isChild)
 {
     if (root != NULL)
     {
-        printf("%d,", root->data);
-        preOrder(root->left);
-        preOrder(root->right);
+        if(isChild)
+            printf(",");
+        printf("%d", root->data);
+        preOrder(root->left,1);
+        preOrder(root->right,1);
 
     }
 }
@@ -95,22 +97,18 @@ Node *rightRotation(Node * node){
 }
 
 void rotateTree(Node** node) {
-    //printf("%d \n",(*node)->data);
     if ((*node)->left != NULL) {
          rotateTree(&(*node)->left);
         if ((*node)->frequency < (*node)->left->frequency) {
-            printf("left %d \n", (*node)->data);
             (*node) = rightRotation((*node));
         }
         if ((*node)->right != NULL)
             rotateTree(&(*node)->left);
     }
-    else if ((*node)->right != NULL) {
+    if ((*node)->right != NULL) {
        rotateTree(&(*node)->right);
         if ((*node)->frequency < (*node)->right->frequency) {
-            printf("%d right %d \n", (*node)->data,(*node)->right->data);
             (*node) = leftRotation((*node));
-
         }
         if ((*node)->left != NULL)
             rotateTree(&(*node)->left);
