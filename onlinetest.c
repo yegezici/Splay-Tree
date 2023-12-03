@@ -11,29 +11,31 @@ typedef struct node Node;
 
 
 Node *insert(Node *root, int data, int frequency);
-void preOrder(Node *root);
+void preOrder(Node *root, int isChild);
 void readingFile(FILE *file, Node **root);
 void rotateTree(Node **node);
 Node *leftRotation(Node* node);
 Node *rightRotation(Node* node);
-void searchA(Node* root, int data);
+void search(Node* root, int data);
 int main()
 {
     int dataToSearch;
     Node *root = NULL;
-    FILE *file = fopen("input.txt", "r");
+    char inputFile[25];
+    scanf("%s", inputFile);
+    FILE *file = fopen(inputFile, "r");
     readingFile(file, &root);
+    printf("Pre-order traversal of constructed tree :");
+    preOrder(root,0);
+    printf("\n");
     while(1 == 1) {
-        printf(("Enter a value to search: \n"));
+        printf(("Enter a value to search: "));
         scanf("%d", &dataToSearch);
-        if(dataToSearch == 0){
-            break;
-        }
-        //printf("%d   ", dataToSearch);
-        searchA(root, dataToSearch);
+        search(root, dataToSearch);
         rotateTree(&root);
         printf("Pre-order traversal of constructed tree : ");
-        preOrder(root);
+        preOrder(root,0);
+        printf("\n");
     }
     return 0;
 }
@@ -69,13 +71,15 @@ Node *insert(Node *root, int data, int frequency)
 }
 
 
-void preOrder(Node *root)
+void preOrder(Node *root, int isChild)
 {
     if (root != NULL)
     {
-        printf("%d,", root->data);
-        preOrder(root->left);
-        preOrder(root->right);
+        if(isChild)
+            printf(",");
+        printf("(%d,%d)", root->data, root->frequency);
+        preOrder(root->left,1);
+        preOrder(root->right,1);
 
     }
 }
@@ -102,7 +106,6 @@ Node *rightRotation(Node * node){
 }
 
 void rotateTree(Node** node) {
-    //printf("%d \n",(*node)->data);
     if ((*node)->left != NULL) {
         rotateTree(&(*node)->left);
         if ((*node)->frequency < (*node)->left->frequency) {
@@ -112,7 +115,7 @@ void rotateTree(Node** node) {
         if ((*node)->right != NULL)
             rotateTree(&(*node)->right);
     }
-    if ((*node)->right != NULL) {
+     if ((*node)->right != NULL) {
         rotateTree(&(*node)->right);
         if ((*node)->frequency < (*node)->right->frequency) {
 
@@ -124,17 +127,15 @@ void rotateTree(Node** node) {
     }
 }
 
-void searchA(Node* root, int data){
+void search(Node* root, int data){
     if((root)!= NULL) {
         if (data == (root)->data) {
             ((root)->frequency)++;
-            printf("%d \n",(root)->frequency);
-
         } else if (data < (root)->data) {
-            searchA(root->left, data);
+            search(root->left, data);
 
         } else if (data > (root)->data) {
-            searchA(root->right, data);
+            search(root->right, data);
         }
     }
 }
