@@ -14,8 +14,8 @@ Node *insert(Node *root, int data, int frequency);
 void preOrder(Node *root, int isChild);
 void readingFile(FILE *file, Node **root);
 void rotateTree(Node **node);
-Node *leftRotation(Node* node);
-Node *rightRotation(Node* node);
+Node *rightChildToRoot(Node* root);
+Node *leftChildToRoot(Node* root);
 
 
 int main()
@@ -43,7 +43,8 @@ Node *insert(Node *root, int data, int frequency)
 
         root->data = data;
         root->frequency = frequency;
-        root->left = root->right = NULL;
+        root->left = NULL;
+        root->right = NULL;
         return root;
     }
 
@@ -61,7 +62,7 @@ Node *insert(Node *root, int data, int frequency)
     return root;
 }
 
-
+//This function makes preorder traversal.
 void preOrder(Node *root, int isChild)
 {
     if (root != NULL)
@@ -74,6 +75,8 @@ void preOrder(Node *root, int isChild)
 
     }
 }
+//This function reads input from a file then invokes insert function to create nodes
+//In this function, double pointers are used for changing pointer's value.
 void readingFile(FILE *file, Node **root){
     int data, frequency;
     while (fscanf(file, "%d, %d", &data, &frequency) == 2)
@@ -82,34 +85,42 @@ void readingFile(FILE *file, Node **root){
     }
     fclose(file);
 }
-Node *leftRotation(Node *node){
-    Node *temp = node->right;
-    node->right = temp->left;
-    temp->left = node;
+//This function makes the right child the new root. Previous root is left child of new root.
+Node *rightChildToRoot(Node *root){
+    Node *temp = root->right;
+    root->right = temp->left;
+    temp->left = root;
     return temp;
 }
-
-Node *rightRotation(Node * node){
-    Node *temp = node->left;
-    node->left = temp->right;
-    temp->right = node;
+//This function makes the left child the new root. Previous root is right child of new root.
+Node *leftChildToRoot(Node * root){
+    Node *temp = root->left;
+    root->left = temp->right;
+    temp->right = root;
     return temp;
 }
-
+/*This function changes the pointers of nodes to update this tree
+ * with frequency values of nodes. The double pointer is required
+ * to change pointer's pointer value*/
 void rotateTree(Node** node) {
+    //Until find the leaves, this function makes recursive calls.
     if ((*node)->left != NULL) {
-         rotateTree(&(*node)->left);
+        rotateTree(&(*node)->left);
+        //If frequency value of root's left child is bigger than root, their positions are changed.
         if ((*node)->frequency < (*node)->left->frequency) {
-            (*node) = rightRotation((*node));
+            (*node) = leftChildToRoot((*node));
         }
+        //To check right child of left child.
         if ((*node)->right != NULL)
-            rotateTree(&(*node)->left);
+            rotateTree(&(*node)->right);
     }
     if ((*node)->right != NULL) {
        rotateTree(&(*node)->right);
+        //If frequency value of root's right child is bigger than root, their positions are changed.
         if ((*node)->frequency < (*node)->right->frequency) {
-            (*node) = leftRotation((*node));
+            (*node) = rightChildToRoot((*node));
         }
+        //To check left child of right child.
         if ((*node)->left != NULL)
             rotateTree(&(*node)->left);
     }
