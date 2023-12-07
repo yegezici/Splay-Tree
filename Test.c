@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+//This is a binary search tree structure
 struct node
 {
-    int data;
-    int frequency;
-    struct node *left;
-    struct node *right;
+    int data;             //Data value in a node
+    int frequency;        //Data value's frequency that represents how many times it is searched
+    struct node *left;    //Left child of a node
+    struct node *right;   //Right child of a node
 };
 typedef struct node Node;
 
-
+ //Necessary functions are defined
 Node *insert(Node *root, int data, int frequency);
 void preOrder(Node *root, int isChild);
 void readingFile(FILE *file, Node **root);
@@ -20,7 +21,9 @@ Node *leftChildToRoot(Node* root);
 
 int main()
 {
+
     Node *root = NULL;
+    //Getting input values from a given file
     char inputFile[25];
     scanf("%s", inputFile);
     FILE *file = fopen(inputFile, "r");
@@ -33,6 +36,7 @@ int main()
 
 
 Node *insert(Node *root, int data, int frequency)
+ //Newly created nodes are inserted to BST in this function
 {
 
     if (root == NULL)
@@ -48,9 +52,10 @@ Node *insert(Node *root, int data, int frequency)
         return root;
     }
 
-
+    //Nodes are inserted to BST according to their values.
     if (data < root->data)
     {
+        //Recursive function calls are used for inserting the nodes.
         root->left = insert(root->left, data, frequency);
     }
     else if (data > root->data)
@@ -115,7 +120,7 @@ void rotateTree(Node** node) {
             rotateTree(&(*node)->right);
     }
     if ((*node)->right != NULL) {
-       rotateTree(&(*node)->right);
+        rotateTree(&(*node)->right);
         //If frequency value of root's right child is bigger than root, their positions are changed.
         if ((*node)->frequency < (*node)->right->frequency) {
             (*node) = rightChildToRoot((*node));
