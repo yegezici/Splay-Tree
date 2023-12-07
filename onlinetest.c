@@ -14,8 +14,8 @@ Node *insert(Node *root, int data, int frequency);
 void preOrder(Node *root, int isChild);
 void readingFile(FILE *file, Node **root);
 void rotateTree(Node **node);
-Node *leftRotation(Node* node);
-Node *rightRotation(Node* node);
+Node *rightChildToRoot(Node* root);
+Node *leftChildToRoot(Node* root);
 void search(Node* root, int data);
 int main()
 {
@@ -52,7 +52,8 @@ Node *insert(Node *root, int data, int frequency)
 
         root->data = data;
         root->frequency = frequency;
-        root->left = root->right = NULL;
+        root->left = NULL;
+        root->right = NULL;
         return root;
     }
 
@@ -91,17 +92,17 @@ void readingFile(FILE *file, Node **root){
     }
     fclose(file);
 }
-Node *leftRotation(Node *node){
-    Node *temp = node->right;
-    node->right = temp->left;
-    temp->left = node;
+Node *rightChildToRoot(Node *root){
+    Node *temp = root->right;
+    root->right = temp->left;
+    temp->left = root;
     return temp;
 }
 
-Node *rightRotation(Node * node){
-    Node *temp = node->left;
-    node->left = temp->right;
-    temp->right = node;
+Node *leftChildToRoot(Node * root){
+    Node *temp = root->left;
+    root->left = temp->right;
+    temp->right = root;
     return temp;
 }
 
@@ -110,7 +111,7 @@ void rotateTree(Node** node) {
         rotateTree(&(*node)->left);
         if ((*node)->frequency < (*node)->left->frequency) {
 
-            (*node) = rightRotation((*node));
+            (*node) = rightChildToRoot((*node));
         }
         if ((*node)->right != NULL)
             rotateTree(&(*node)->right);
@@ -119,7 +120,7 @@ void rotateTree(Node** node) {
         rotateTree(&(*node)->right);
         if ((*node)->frequency < (*node)->right->frequency) {
 
-            (*node) = leftRotation((*node));
+            (*node) = leftChildToRoot((*node));
 
         }
         if ((*node)->left != NULL)
